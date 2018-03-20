@@ -1,0 +1,19 @@
+{
+  "name": "googleshopping",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Souha Hedhli",
+  "license": "ISC",
+  "devDependencies": {
+    "chromedriver": "^2.36.0",
+    "cucumber": "^4.0.0",
+    "selenium-webdriver": "^4.0.0-alpha.1"
+  },
+  "dependencies": {
+    "chai": "^4.1.2"
+  }
+}
