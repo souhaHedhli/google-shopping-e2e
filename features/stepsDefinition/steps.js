@@ -1,38 +1,39 @@
-const { Given, When, Then, After } = require('cucumber');
+const { Given, When, Then, After, setDefaultTimeout } = require('cucumber');
 const { assert } = require('chai');
-const config = require('../../pageobject/config')
+
+setDefaultTimeout(10000)
 
 After(function () {
   this.baseFunctions.quit();
 })
 
 Given(/^I am on the google shopping page$/, function() {
-  this.baseFunctions.visit(config.homeUrl);
+  this.baseFunctions.visit(this.config.homeUrl);
 })
 When(/^I search for "([^"]*)"$/, async function (arg) {
-  this.baseFunctions.writeByName('q', arg);
-   const searchBtn = await this.baseFunctions.findById('gbqfb');
+  this.baseFunctions.writeByName(this.baseElements.searchBar, arg);
+   const searchBtn = await this.baseFunctions.findById(this.baseElements.searchBtn);
    searchBtn.click();
 })
 Then(/^I get "([^"]*)" results$/, async function (arg) {
-  const elements = await this.baseFunctions.findAll('.sh-dlr__list-result .eIuuYe a');
+  const elements = await this.baseFunctions.findAll(this.baseElements.resultList);
   elements.map(async function (element) {
     assert.include(await element.getText(), arg);
     })
 })
 When(/^I click on up to \$25$/, async function () {
-  const radio = await this.baseFunctions.find('.sh-dr__g span.JcqPK');
+  const radio = await this.baseFunctions.find(this.baseElements.upTo25);
   radio.click();
 })
 Then(/^None of the results are more than \$25$/, async function () {
-  const prices = await this.baseFunctions.findAll('.sh-dlr__list-result .ZGFjDb .mQ35Be span.O8U6h');
+  const prices = await this.baseFunctions.findAll(this.baseElements.pricesList);
     prices.map(function (price) {
       assert.isAtMost(price, '$25');
     })
 })
 
 When(/^I click on books$/, async function () {
-  const more = await this.baseFunctions.find('g-header-menu');
+  const more = await this.baseFunctions.find(this.baseElements.menuMore);
   more.click();
   const books = await this.baseFunctions.findByLinkText('Books');
   books.click();
@@ -58,11 +59,11 @@ Then(/^the results are for BritishCornerShop\.co\.uk$/, async function () {
 })
 
 When(/^I click more$/, async function () {
-  const moreBtn = await this.baseFunctions.find('.ZI2vDe');
+  const moreBtn = await this.baseFunctions.find(this.baseElements.more);
   moreBtn.click();
 })
 When(/^I click on Wayfair\.ca$/, async function (arg) {
-  const btn = await this.baseFunctions.find('[title="Wayfair.ca"]');
+  const btn = await this.baseFunctions.find(this.baseElements.wayfaireCa);
   btn.click();
 })
 Then(/^the results are for Wayfair\.ca$/, async function () {
@@ -73,20 +74,20 @@ Then(/^the results are for Wayfair\.ca$/, async function () {
 })
 
 When(/^I enter \$20$/, async function () {
-  this.baseFunctions.writeByName('lower', '20');
+  this.baseFunctions.writeByName(this.baseElements.lower, '20');
 })
 
 When(/^I enter \$30$/, async function () {
-  this.baseFunctions.writeByName('upper', '30');
+  this.baseFunctions.writeByName(this.baseElements.upper, '30');
 })
 
 When(/^I click go$/, async function () {
-  const btn = await this.baseFunctions.find('.LfUe1b');
+  const btn = await this.baseFunctions.find(this.baseElements.go);
   btn.click();
 })
 
 Then(/^the results are all between \$20 and \$30$/, async function () {
-  const elements = await this.baseFunctions.findAll('.mQ35Be div span');
+  const elements = await this.baseFunctions.findAll(this.baseElements.pricesList);
   elements.map(async function (element) {
     const price = await parseFloat(element.getText().replace(',', '.'));
     assert.isAtLeast(price, 20);
